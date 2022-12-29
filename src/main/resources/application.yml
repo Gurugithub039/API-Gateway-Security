@@ -1,0 +1,78 @@
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl.defaultZone: http://localhost:8769/eureka/
+
+spring:
+  redis:
+    host:localhost
+    port:6379
+  application:
+    name: GATEWAY-SERVICE
+  cloud:
+    gateway:
+      routes:
+        - id: bookTravel-service
+          uri: lb://BOOK-TRAVEL-SERVICE
+          predicates:
+            - Path=/bookTravel/**
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICEs
+          predicates:
+            - Path=/payment/**
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/users/**
+        - id: register-service
+          uri: lb://REGISTER-SERVICE
+          predicates:
+            - Path=/register/**
+
+
+
+server:
+  port: 8989
+
+  instance:
+    hostname: localhost
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+hystrix:
+  command:
+    fallbackcmd:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+
+
+
+
+
+
+
+
+
+
+
+
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: hystrix.stream
+#
+#hystrix:
+#  command:
+#    fallbackcmd:
+#      execution:
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 5000
